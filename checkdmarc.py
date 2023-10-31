@@ -1469,25 +1469,8 @@ def parse_dmarc_record(
                 uri = parse_dmarc_report_uri(uri)
                 parsed_uris.append(uri)
                 email_address = uri["address"]
-                email_domain = email_address.split("@")[-1]
-                if email_domain.lower() != domain:
-                    verify_dmarc_report_destination(domain, email_domain,
-                                                    nameservers=nameservers,
-                                                    resolver=resolver,
-                                                    timeout=timeout)
-                try:
-                    _get_mx_hosts(email_domain, nameservers=nameservers,
-                                  resolver=resolver, timeout=timeout)
-                except _DMARCWarning:
-                    raise DMARCReportEmailAddressMissingMXRecords(
-                        "The domain for rua email address "
-                        f"{email_address} has no MX records"
-                    )
-                except DNSException as warning:
-                    raise DMARCReportEmailAddressMissingMXRecords(
-                        "Failed to retrieve MX records for the domain of "
-                        "rua email address "
-                        f"{email_address} - {warning}")
+
+
             except _DMARCWarning as warning:
                 warnings.append(str(warning))
 
@@ -1509,25 +1492,6 @@ def parse_dmarc_record(
                 parsed_uris.append(uri)
                 email_address = uri["address"]
                 email_domain = email_address.split("@")[-1]
-                if email_domain.lower() != domain:
-                    verify_dmarc_report_destination(domain, email_domain,
-                                                    nameservers=nameservers,
-                                                    resolver=resolver,
-                                                    timeout=timeout)
-                try:
-                    _get_mx_hosts(email_domain, nameservers=nameservers,
-                                  resolver=resolver, timeout=timeout)
-                except _SPFWarning:
-                    raise DMARCReportEmailAddressMissingMXRecords(
-                        "The domain for ruf email address "
-                        f"{email_address} has no MX records"
-                    )
-                except DNSException as warning:
-                    raise DMARCReportEmailAddressMissingMXRecords(
-                        "Failed to retrieve MX records for the domain of "
-                        "ruf email address "
-                        f"{email_address} - {warning}"
-                    )
 
             except _DMARCWarning as warning:
                 warnings.append(str(warning))
